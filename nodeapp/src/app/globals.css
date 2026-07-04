@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #06131f;
+  --color-surface: #0b1f33;
+  --color-surface-2: #12314d;
+  --color-primary: #3aa0ff;
+  --color-secondary: #7dd3fc;
+  --color-accent: #f59e0b;
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+}
+
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-text);
+  --color-popover: var(--color-surface);
+  --color-popover-foreground: var(--color-text);
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: #00111f;
+  --color-muted: var(--color-surface-2);
+  --color-muted-foreground: var(--color-text-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: #0f172a;
+  --color-destructive: var(--color-danger);
+  --color-border: rgba(148, 163, 184, 0.18);
+  --color-input: rgba(148, 163, 184, 0.22);
+  --color-ring: var(--color-primary);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg: #f8fbff;
+    --color-surface: #ffffff;
+    --color-surface-2: #eef4fb;
+    --color-primary: #0066cc;
+    --color-secondary: #0ea5e9;
+    --color-accent: #d97706;
+    --color-text: #0f172a;
+    --color-text-muted: #475569;
+    --color-success: #16a34a;
+    --color-danger: #dc2626;
+  }
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
