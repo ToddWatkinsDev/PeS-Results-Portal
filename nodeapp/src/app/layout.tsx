@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { SiteHeader } from "@/presentation/components/site-header";
+import SiteHeader from "@/presentation/components/site-header";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Play eSailing Results Portal",
-  description: "Public-first results platform for Play eSailing races.",
+  description: "Race results, rankings, and administration in one place.",
 };
 
 export default function RootLayout({

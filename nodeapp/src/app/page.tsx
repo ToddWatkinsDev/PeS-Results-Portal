@@ -34,24 +34,15 @@ export default function Home() {
             <h2 className="text-lg font-semibold">Recent results</h2>
           </div>
           <div className="p-5">
-            <div className="grid grid-cols-4 gap-4 text-sm font-medium text-slate-500">
-              <div>Event</div>
-              <div>Class</div>
-              <div>Winner</div>
-              <div>Status</div>
-            </div>
-            <div className="mt-4 space-y-3">
-              <div className="grid grid-cols-4 gap-4 rounded-xl bg-slate-50 px-4 py-3 text-sm">
-                <div>Spring Series</div>
-                <div>ILCA 7</div>
-                <div>A. Smith</div>
-                <div>Published</div>
+            <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-5 py-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold">No published results yet</h3>
+                <p className="text-sm text-slate-600">
+                  Once races are published, the latest results will appear here.
+                </p>
               </div>
-              <div className="grid grid-cols-4 gap-4 rounded-xl bg-slate-50 px-4 py-3 text-sm">
-                <div>Club Night</div>
-                <div>49er</div>
-                <div>M. Jones</div>
-                <div>Draft</div>
+              <div className="rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white">
+                View results
               </div>
             </div>
           </div>
