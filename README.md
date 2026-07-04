@@ -1,37 +1,51 @@
-Phase 2 status 1
-We’re now at the point where the app is installed, running, and showing a real landing shell in the browser. The routing issue is resolved, and the current page is a working placeholder dashboard that proves src/app/page.tsx, src/app/layout.tsx, and the header component are wired correctly.
+Phase 2 Status 2
+Current state
+Phase 2 is now past the initial shell-and-structure stage and into the design-system buildout stage. The app already has a working App Router foundation, a shared global stylesheet, and a reusable site header, so the remaining work is focused on completing the public-facing shell and the core UI surfaces.
 
-What has been done
-The project was confirmed to use the App Router structure under src/app, which is the correct place for layout.tsx, page.tsx, and global styles in Next.js.
+What has been generated
+SiteHeader in src/presentation/components/site-header.tsx.
 
-globals.css was replaced with a Tailwind v4-style import and theme tokens so the app has a global style foundation.
+Button in src/presentation/components/ui/button.tsx.
 
-layout.tsx now imports the global stylesheet and renders the shared SiteHeader above the page content.
+Input in src/presentation/components/ui/input.tsx.
 
-SiteHeader was created in src/presentation/components/site-header.tsx as the first reusable UI component.
+Select in src/presentation/components/ui/select.tsx.
 
-The homepage was replaced with a dashboard-style shell so the portal has a visible starting point instead of the default starter page .
+Badge in src/presentation/components/ui/badge.tsx.
 
-Where Phase 2 is now
-Phase 2 is currently at the “shell and structure” stage. The app now has a working top-level layout, a shared header, and a homepage that looks like a portal rather than a blank scaffold . The next meaningful work in Phase 2 is to replace the temporary dashboard copy with real portal sections and connect them to actual data sources.
+TableShell in src/presentation/components/table-shell.tsx.
 
-Known issues
-The earlier blank-page problem was caused by a rogue folder shadowing the intended App Router root; that has been fixed.
+ErrorState in src/presentation/components/error-state.tsx.
 
-The app originally used an outdated next version, which caused App Router and compatibility problems; it has since been upgraded to a modern version.
+SkeletonLoader in src/presentation/components/ui/skeleton-loader.tsx.
 
-The project still contains placeholder UI copy, including the results table rows, which should be replaced with real data or an empty state later.
+Card and EmptyState are already marked as built.
 
-The dev server had OpenSSL/webpack compatibility issues on this machine, so the Windows legacy OpenSSL workaround is still part of the dev script.
+Continued from Phase 2 Status 1
+The app is still using the App Router structure under src/app.
 
-There were repeated Head key warnings during development, but they did not stop the app from compiling and loading.
+layout.tsx still imports the global stylesheet and renders SiteHeader above the page content.
 
-Current working state
-The current state is: the app loads, the page renders, the header works, and the shell is visible in the browser . At this point, Phase 2 is usable, but still mostly structural and not yet connected to live results data.
+The earlier routing and blank-page issues are already resolved.
 
-Recommended next move
-The next clean step is to remove the mock rows and replace them with either:
+The current homepage is still a placeholder dashboard shell, not yet a finished branded home page.
 
-a real empty state, or
+The placeholder table rows still need to be replaced with real data or a proper empty state.
 
-a first data-driven results component.
+What Phase 2 has established
+A stable UI primitive set for forms, labels, state handling, and table containers.
+
+A reusable header component for the top-level app shell.
+
+The beginning of a consistent Tailwind-based design system.
+
+A component foundation that matches the design doc’s Phase 2 priorities.
+
+What is left in Phase 2
+Build the home page sections described in the design doc.
+
+Replace placeholder dashboard copy with branded landing content.
+
+Add or refine the footer if it is needed for the public shell.
+
+Replace any remaining mock rows with real data, an empty state,
