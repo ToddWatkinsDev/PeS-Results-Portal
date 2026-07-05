@@ -1,92 +1,96 @@
-Phase 2 Completion Document
+Phase 3 design doc
+Phase 3 is the public experience phase of the results portal: the home page, public results list, and public race detail page. It should present the platform clearly to anonymous visitors, show public races in a table-first format on desktop, and provide a streamlined mobile card view for smaller screens [user].
 
-Phase 2 is complete to my standards: the app shell, public routes, dashboard routes, admin routes, and shared UI foundation are all in place, and the project now matches the Phase 2 design intent. I’m satisfied with the result as a Phase 2 milestone because the codebase now has a stable routed structure, branded page patterns, and reusable components instead of a scaffold.
+Goals
+The goal of Phase 3 is to make the platform feel like a finished public results site rather than a backend shell. Visitors should immediately understand what the site is for, see featured/public content, and browse race results without logging in [user]. Private races must remain hidden unless the viewer has been invited [user].
 
-Phase 2 summary
-Phase 2 moved the project from shell-and-structure into a working design-system implementation. The app now has the App Router foundation, global Tailwind styling, a reusable site header, a footer, and the public-facing pages needed for the first release path. The route baseline from the spec is now represented in the codebase, including public results, public race detail, login, dashboard, race creation, race management, manual result entry, and admin oversight.
+Scope
+Phase 3 includes:
 
-Files made
-These were the Phase 2 files created or completed during the buildout, grouped by area.
+Home page with hero, explanation, featured feed placeholder, and access CTA [user].
 
-App shell
-src/app/layout.tsx
+Public results list with table-first desktop layout and compact mobile card view [user].
 
-src/app/globals.css
+Public race detail page with full results display.
 
-src/app/not-found.tsx
+Race header labels that organisers can rename at any time, including labels like R1, R2, and R3 [user].
 
-src/app/favicon.ico
+Score-based ordering by lowest Net points first only after at least one race has been added [user].
 
-Public pages
-src/app/page.tsx
+Page structure
+Home page
+The home page should explain the platform in a branded, official-looking way. It should include a clear hero, a short explanation of how the platform serves spectators, players, and organisers, and a login/access call-to-action. The featured feed should sit below the main content and start as placeholders, but the layout should be ready for future social media-style updates or developer posts [user].
 
-src/app/results/page.tsx
+Public results list
+The public results list should be the main browsing surface for anonymous visitors. On desktop, it should stay very similar to the example you shared, with a dense table layout and organiser-editable race headers [user]. On small screens, it should switch to a simplified card view showing final position, Name, Points, and country [user].
 
-src/app/results/[raceSlug]/page.tsx
+Public race detail
+The race detail page should show the selected race, its visibility state, metadata, and the full result grid. It should support the same organiser-editable headers and result presentation logic as the list page [user]. This page should also include proper empty, loading, and error states.
 
-src/app/login/page.tsx
+Data model
+The page data should be separated into internal view models so the UI does not depend on backend payloads directly. Suggested model groups are:
 
-Dashboard pages
-src/app/dashboard/page.tsx
+Home content model for hero text, featured feed placeholders, and CTA data [user].
 
-src/app/dashboard/races/page.tsx
+Race list model for race name, slug, visibility, organiser-defined headers, and summary metadata [user].
 
-src/app/dashboard/races/new/page.tsx
+Race detail model for header labels, result rows, net points, and display order [user].
 
-src/app/dashboard/races/[raceId]/page.tsx
+Feed item model for placeholder social/developer content slots [user].
 
-src/app/dashboard/races/[raceId]/results/new/page.tsx
+The design doc recommends internal application models, reusable components, and adapter-style separation for future integrations.
 
-Admin pages
-src/app/admin/users/page.tsx
+Header rules
+Race headers such as R1, R2, and R3 should not be hardcoded as fixed labels [user]. Instead, organisers should be able to rename them whenever they want, even after results already exist [user]. The underlying result slot should remain stable while the visible label changes, so the data remains consistent and the UI stays flexible [user].
 
-src/app/admin/races/page.tsx
+Sorting rules
+Initially, the table can use a random or default order when a race has no results yet [user]. Once one race has been added, the public results list should automatically sort by lowest Net points first and highest Net points last [user]. This sorting rule should apply consistently across the desktop table and any mirrored detail view, but only after the first scored race exists [user].
 
-Shared presentation components
-src/presentation/components/site-header.tsx
+Visibility rules
+Public races may be viewed by anyone [user]. Editing requires login [user]. Private races should be hidden completely from the public list and should only be visible to invited users [user]. This rule should be enforced in both the UI and later route/permission logic so private content never appears in public browsing by accident.
 
-src/presentation/components/footer.tsx
+Responsive behaviour
+The design should be mobile-first and accessible. Desktop layouts should prioritise density and comparison, while smaller screens should collapse into readable card layouts with the most important summary fields retained [user]. Controls should remain touch-friendly, with clear focus states and semantic structure.
 
-src/presentation/components/theme-toggle.tsx
+Accessibility and states
+The public pages should include loading, empty, and error states from the start. Keyboard navigation, visible focus styles, and sufficient contrast in dark and light mode are required. The design should avoid hiding important information behind hover-only interactions so the results remain usable across devices.
 
-src/presentation/components/error-state.tsx
+Styling direction
+Tailwind CSS should remain the primary styling system, with design tokens used instead of scattered hardcoded values. The public home page can be more brand-led, but the race screens should stay data-led and scannable. Reusable components should be preferred over repeated layout code so the public pages remain consistent and easy to extend.
 
-src/presentation/components/table-shell.tsx
+Development order
+Define the public page data models and race header metadata rules [user].
 
-src/presentation/components/ui/button.tsx
+Build the home page with placeholder featured feed below the main content [user].
 
-src/presentation/components/ui/input.tsx
+Build the desktop-first public results table [user].
 
-src/presentation/components/ui/select.tsx
+Add the mobile card view for small screens [user].
 
-src/presentation/components/ui/badge.tsx
+Build the public race detail page.
 
-src/presentation/components/ui/card.tsx
+Implement organiser-editable race headers [user].
 
-src/presentation/components/ui/empty-state.tsx
+Add the “sort by lowest Net first after first race exists” rule [user].
 
-src/presentation/components/ui/skeleton-loader.tsx
+Add loading, empty, and error states.
 
-What Phase 2 achieved
-The app now has a reusable shell and a complete set of branded routes that match the planned information architecture. The home page, results list, and race detail views establish the public experience, while the dashboard and admin routes establish the authenticated management surfaces. The component library now includes the primitives and helpers needed for consistent expansion later.
+Add accessibility and responsiveness polish.
 
-The route tree is also aligned with the approved plan in the spec, which is important because the structure itself is part of the foundation deliverable. In practical terms, the app is no longer just “running”; it has a coherent public shell and internal route map.
+Validate that private races stay hidden unless invited [user].
 
-Issues found
-There were a few issues during Phase 2, but they were resolved or contained.
+Acceptance criteria
+The home page clearly explains the platform and includes a placeholder featured feed [user].
 
-A rogue folder had previously shadowed the intended App Router root, causing the blank-page issue; that was fixed.
+The results list is table-first on desktop and card-based on mobile [user].
 
-The project had an older Next version at one point, which caused App Router compatibility problems; it was upgraded.
+Race headers are editable at any time by organisers [user].
 
-Some placeholder content remained in the results table and dashboard shell early on, but the routes were then completed and cleaned up.
+Table ordering by lowest Net points only activates once at least one race has been added [user].
 
-The dev environment had OpenSSL/webpack compatibility issues on the machine, so the Windows legacy OpenSSL workaround remained part of the dev script.
+Public races are visible to everyone, edit access requires login, and private races remain hidden unless invited [user].
 
-Head key warnings appeared during development, but they did not block compilation or page rendering.
+The design is responsive, accessible, and consistent with the existing platform design direction.
 
-Standards check
-I’m happy with Phase 2 because it now meets the intent of the design and foundation docs: the app shell exists, the shared UI set exists, the public experience is branded, and the admin/dashboard route structure is in place. The remaining items listed in the Phase 2 status notes are better treated as Phase 3 or feature-level work, especially replacing demo arrays with real data and wiring the results screens to actual sources.
-
-Next direction
-The next sensible phase is to move from shell work into data wiring and feature implementation: replace mock arrays with real data, connect the public results surfaces, and begin formalising the domain and application layers described in the specs. The platform is now ready for that transition.
+Implementation note
+The design doc recommends building public-facing pages as part of a modular application rather than a static site, using reusable components and internal models. That approach fits Phase 3 well because it keeps the public browsing experience stable while leaving room for future social feed integration, richer scoring, and authenticated management features [user].
