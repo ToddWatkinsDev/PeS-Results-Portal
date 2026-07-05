@@ -7,7 +7,6 @@ import type {
   ResultRowViewModel,
 } from "@/presentation/view-models/public";
 
-// Mock data mapped into view models for Phase 3 (temporary adapter)
 const feed: FeedItemViewModel[] = [
   {
     id: "f1",
@@ -38,6 +37,14 @@ const mockRaces: RaceListRowViewModel[] = [
     headers: defaultHeaders(["R1", "R2", "R3"]),
     entryCount: 8,
   },
+  {
+    slug: "private-invite-race",
+    name: "Private Invite Race",
+    visibility: "private",
+    scheduledAt: "2026-07-04",
+    headers: defaultHeaders(["R1", "R2", "R3"]),
+    entryCount: 10,
+  },
 ];
 
 const mockResultsForSpring = (): ResultRowViewModel[] => [
@@ -67,6 +74,25 @@ const mockResultsForSpring = (): ResultRowViewModel[] => [
   },
 ];
 
+const mockResultsForSummer = (): ResultRowViewModel[] => [
+  {
+    position: 1,
+    gamerTag: "TideRider",
+    country: "NOR",
+    scores: { r1: 2, r2: 2, r3: 1 },
+    netPoints: 5,
+    totalPoints: 5,
+  },
+  {
+    position: 2,
+    gamerTag: "BlueWake",
+    country: "AUS",
+    scores: { r1: 1, r2: 4, r3: 2 },
+    netPoints: 7,
+    totalPoints: 7,
+  },
+];
+
 export async function fetchHomeContent(): Promise<HomeContentViewModel> {
   return {
     heroTitle: "Public race results, built for sailors, organisers, and spectators.",
@@ -79,24 +105,43 @@ export async function fetchHomeContent(): Promise<HomeContentViewModel> {
 }
 
 export async function fetchRaceList(): Promise<RaceListRowViewModel[]> {
-  // In future, map external payloads -> RaceListRowViewModel here.
-  return mockRaces;
+  const publicRaces = mockRaces.filter((race) => race.visibility === "public");
+  return publicRaces;
 }
 
 export async function fetchRaceDetail(slug: string): Promise<RaceDetailViewModel | null> {
-  if (slug !== "spring-series-round-1") return null;
+  if (slug === "private-invite-race") return null;
 
-  const headers = defaultHeaders(["R1", "R2", "R3"]);
-  const results = mockResultsForSpring();
+  if (slug === "spring-series-round-1") {
+    const headers = defaultHeaders(["R1", "R2", "R3"]);
+    const results = mockResultsForSpring();
+    return {
+      name: "Spring Series Round 1",
+      slug: "spring-series-round-1",
+      visibility: "public",
+      scheduledAt: "2026-07-03",
+      status: "Published",
+      headers,
+      results: results.sort((a, b) => a.netPoints - b.netPoints),
+      hasScores: results.length > 0,
+    };
+  }
 
-  return {
-    name: "Spring Series Round 1",
-    slug: "spring-series-round-1",
-    visibility: "public",
-    scheduledAt: "2026-07-03",
-    status: "Published",
-    headers,
-    results,
-    hasScores: results.length > 0,
-  };
+  if (slug === "summer-cup-qualifier") {
+    const headers = defaultHeaders(["R1", "R2", "R3"]);
+    const results = mockResultsForSummer();
+    const hasScores = results.length > 0;
+    return {
+      name: "Summer Cup Qualifier",
+      slug: "summer-cup-qualifier",
+      visibility: "public",
+      scheduledAt: "2026-07-01",
+      status: "Published",
+      headers,
+      results: hasScores ? results.sort((a, b) => a.netPoints - b.netPoints) : results,
+      hasScores,
+    };
+  }
+
+  return null;
 }
