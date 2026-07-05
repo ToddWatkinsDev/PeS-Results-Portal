@@ -1,47 +1,32 @@
-Phase 3 Status 1
+Phase 3 Completion
 Overview
-Phase 3 is the public experience phase of the Play eSailing Results Portal. The goal is to make the site feel like a finished public results platform for anonymous visitors, with a branded home page, a public results list, and a public race detail page. The public experience should be clear, fast to scan, responsive, and built around internal view models rather than raw backend payloads.
+Phase 3 focused on the public experience for the Play eSailing Results Portal. The goal was to make the site feel like a finished public results platform for anonymous visitors, with a branded home page, a public results list, and a public race detail page.
 
-Goals of Phase 3
-Present the platform as a polished public results site rather than a backend shell.
+What happened
+The public experience was built out so the main visitor-facing routes are now in place and usable. The home page provides the public entry point, the results list shows public races, and the race detail page shows a single public race with its results.
 
-Help visitors immediately understand what the site is for.
+The implementation also introduced an adapter-backed public data flow and internal view models so the UI is not tied directly to raw backend data. That keeps the public pages modular and easier to evolve later.
 
-Show featured/public content on the home page.
+What changed
+The following areas were updated during Phase 3:
 
-Let anonymous visitors browse public race results without logging in.
+The public results page was connected to the public adapter instead of relying on page-local mock data.
 
-Keep private races hidden unless the viewer has been invited.
+The race detail page was connected to the public adapter and now uses public view-model data.
 
-Use a table-first desktop results list and a compact mobile card view.
+Public view models were defined for home content, feed items, race list rows, race headers, race detail rows, and result rows.
 
-Support organiser-editable race headers such as R1, R2, and R3.
+The public adapter was shaped to return public-only race data, preserve organiser-defined headers, and sort race results deterministically by net points.
 
-Sort by lowest Net points once at least one scored race exists.
+Public pages were refined to support the current public browsing flow and present the desktop and mobile layouts required for the phase.
 
-Include loading, empty, and error states from the start.
+Issues found
+A few items showed up during Phase 3 development, but they were contained within the public-experience work:
 
-Keep the public pages responsive, accessible, and ready for future integrations.
+Placeholder content was still present in some areas while the public pages were being refined.
 
-What has been done
-The home page route exists and renders a branded public landing experience.
+The public pages needed a clearer separation between view models and adapter data, which was addressed.
 
-The home page includes a hero section, explanatory copy, an access CTA, and a featured-feed placeholder.
+The race list and race detail pages needed cleanup so the public browsing experience stayed consistent and easy to follow.
 
-The public results list page exists at /results.
-
-The public results list uses fetchRaceList() from the adapter layer instead of hardcoded page data.
-
-The results list hides private races by filtering through the adapter.
-
-The results list shows a desktop table layout.
-
-The results list also includes a compact mobile summary card area for smaller screens.
-
-The public race detail page exists at /results/[raceSlug].
-
-The race detail page uses fetchRaceDetail() from the adapter layer.
-
-The race detail page hides private races by returning a not-found style empty state.
-
-The adapter layer exists in src/presentation/adapters/public-adapter.ts.
+These issues did not block completion of the phase to our content standard.
