@@ -2,23 +2,11 @@ import Link from "next/link";
 import Button from "@/presentation/components/ui/button";
 import Card from "@/presentation/components/ui/card";
 import EmptyState from "@/presentation/components/ui/empty-state";
+import { fetchRaceList } from "@/presentation/adapters/public-adapter";
 
-const results = [
-  {
-    race: "Spring Series Round 1",
-    winner: "SailorOne",
-    date: "Jul 3, 2026",
-    status: "Published",
-  },
-  {
-    race: "Summer Cup Qualifier",
-    winner: "WindRunner",
-    date: "Jul 1, 2026",
-    status: "Published",
-  },
-];
+export default async function ResultsPage() {
+  const races = await fetchRaceList();
 
-export default function ResultsPage() {
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
       <section className="space-y-3">
@@ -33,26 +21,39 @@ export default function ResultsPage() {
         </p>
       </section>
 
-      {results.length > 0 ? (
+      {races.length > 0 ? (
         <section className="overflow-hidden rounded-2xl border border-[color:var(--color-surface-2)] bg-[color:var(--color-surface)] shadow-sm">
-          <div className="grid grid-cols-4 border-b border-[color:var(--color-surface-2)] bg-[color:var(--color-surface-2)] px-5 py-4 text-sm font-semibold text-[color:var(--color-text)]">
+          <div className="hidden md:grid grid-cols-4 border-b border-[color:var(--color-surface-2)] bg-[color:var(--color-surface-2)] px-5 py-4 text-sm font-semibold text-[color:var(--color-text)]">
             <div>Race</div>
-            <div>Winner</div>
+            <div>Headers</div>
             <div>Date</div>
-            <div>Status</div>
+            <div>Entries</div>
           </div>
 
-          {results.map((result) => (
+          {races.map((r) => (
             <div
-              key={result.race}
-              className="grid grid-cols-4 px-5 py-4 text-sm text-[color:var(--color-text-muted)] transition-colors hover:bg-[color:var(--color-surface-2)]"
+              key={r.slug}
+              className="grid grid-cols-1 gap-3 border-b px-5 py-4 text-sm text-[color:var(--color-text-muted)] md:grid-cols-4 md:items-center transition-colors hover:bg-[color:var(--color-surface-2)]"
             >
               <div className="font-medium text-[color:var(--color-text)]">
-                {result.race}
+                <Link href={`/results/${r.slug}`}>{r.name}</Link>
               </div>
-              <div>{result.winner}</div>
-              <div>{result.date}</div>
-              <div>{result.status}</div>
+
+              <div className="flex gap-2">
+                {r.headers.map((h) => (
+                  <div key={h.slot} className="rounded-full px-2 py-0.5 text-xs bg-[color:var(--color-surface-2)] text-[color:var(--color-text)]">
+                    {h.label}
+                  </div>
+                ))}
+              </div>
+
+              <div className="md:justify-self-start">{r.scheduledAt}</div>
+              <div className="md:justify-self-end">{r.entryCount}</div>
+
+              {/* Mobile compact card summary */}
+              <div className="md:hidden col-span-full text-sm text-[color:var(--color-text-muted)]">
+                {r.visibility === "public" ? "Public" : "Private"} • {r.entryCount} entries
+              </div>
             </div>
           ))}
         </section>
@@ -75,7 +76,7 @@ export default function ResultsPage() {
               Looking for a specific race?
             </h2>
             <p className="text-sm text-[color:var(--color-text-muted)]">
-              Public race detail pages will be connected in the next Phase 2 slice.
+              Public race detail pages will be connected in the next Phase 3 slice.
             </p>
           </div>
           <Button variant="outline" asChild>

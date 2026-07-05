@@ -3,8 +3,11 @@ import Button from "@/presentation/components/ui/button";
 import Card from "@/presentation/components/ui/card";
 import EmptyState from "@/presentation/components/ui/empty-state";
 import Footer from "@/presentation/components/footer";
+import { fetchHomeContent } from "@/presentation/adapters/public-adapter";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const mdl = await fetchHomeContent();
+
   return (
     <>
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 py-12 sm:px-6 lg:px-8">
@@ -16,17 +19,16 @@ export default function HomePage() {
 
             <div className="space-y-4">
               <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-[color:var(--color-text)] sm:text-5xl">
-                Public race results, built for sailors, organisers, and spectators.
+                {mdl.heroTitle}
               </h1>
               <p className="max-w-xl text-base leading-7 text-[color:var(--color-text-muted)] sm:text-lg">
-                Browse public results, manage races, and record outcomes in a clean
-                interface designed for the Play eSailing workflow.
+                {mdl.heroSubtitle}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
               <Button asChild>
-                <Link href="/results">View public results</Link>
+                <Link href={mdl.ctaHref}>{mdl.ctaLabel}</Link>
               </Button>
               <Button variant="outline" asChild>
                 <Link href="/login">Login</Link>
@@ -59,15 +61,26 @@ export default function HomePage() {
             </p>
           </div>
 
-          <EmptyState
-            title="No live results connected yet"
-            description="The homepage shell is ready. Next, connect the results list or keep this empty state until data is available."
-            action={
-              <Button asChild>
-                <Link href="/results">Go to results</Link>
-              </Button>
-            }
-          />
+          {mdl.featuredFeed.length === 0 ? (
+            <EmptyState
+              title="No live results connected yet"
+              description="The homepage shell is ready. Next, connect the results list or keep this empty state until data is available."
+              action={
+                <Button asChild>
+                  <Link href="/results">Go to results</Link>
+                </Button>
+              }
+            />
+          ) : (
+            <div className="space-y-4">
+              {mdl.featuredFeed.map((f) => (
+                <Card key={f.id} className="p-4">
+                  <h3 className="font-semibold text-[color:var(--color-text)]">{f.title}</h3>
+                  <p className="text-sm text-[color:var(--color-text-muted)]">{f.description}</p>
+                </Card>
+              ))}
+            </div>
+          )}
         </section>
       </main>
 
