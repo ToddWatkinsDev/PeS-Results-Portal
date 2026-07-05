@@ -39,9 +39,12 @@ export default async function ResultsPage() {
                 <Link href={`/results/${r.slug}`}>{r.name}</Link>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {r.headers.map((h) => (
-                  <div key={h.slot} className="rounded-full px-2 py-0.5 text-xs bg-[color:var(--color-surface-2)] text-[color:var(--color-text)]">
+                  <div
+                    key={h.slot}
+                    className="rounded-full px-2 py-0.5 text-xs bg-[color:var(--color-surface-2)] text-[color:var(--color-text)]"
+                  >
                     {h.label}
                   </div>
                 ))}
@@ -50,9 +53,27 @@ export default async function ResultsPage() {
               <div className="md:justify-self-start">{r.scheduledAt}</div>
               <div className="md:justify-self-end">{r.entryCount}</div>
 
-              {/* Mobile compact card summary */}
-              <div className="md:hidden col-span-full text-sm text-[color:var(--color-text-muted)]">
-                {r.visibility === "public" ? "Public" : "Private"} • {r.entryCount} entries
+              <div className="md:hidden col-span-full rounded-xl border border-[color:var(--color-surface-2)] bg-[color:var(--color-bg)] p-4 text-sm text-[color:var(--color-text-muted)]">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="font-medium text-[color:var(--color-text)]">{r.name}</div>
+                    <div className="mt-1">{r.scheduledAt}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-semibold text-[color:var(--color-text)]">{r.entryCount}</div>
+                    <div>entries</div>
+                  </div>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {r.headers.map((h) => (
+                    <span
+                      key={h.slot}
+                      className="rounded-full bg-[color:var(--color-surface-2)] px-2 py-0.5 text-xs text-[color:var(--color-text)]"
+                    >
+                      {h.label}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
