@@ -18,8 +18,8 @@ export type HomeContentViewModel = {
 
 // A single race header column definition (organiser-renameable)
 export type RaceHeaderViewModel = {
-  slot: string;       // stable internal key, e.g. "r1", "r2", "r3"
-  label: string;      // visible label, e.g. "R1", "Race 1", "Sprint"
+  slot: string;
+  label: string;
 };
 
 // A single row in the public results list
@@ -37,7 +37,7 @@ export type ResultRowViewModel = {
   position: number;
   gamerTag: string;
   country?: string;
-  scores: Record<string, number | null>; // keyed by slot, e.g. { r1: 3, r2: 1 }
+  scores: Record<string, number | null>;
   netPoints: number;
   totalPoints: number;
 };
@@ -51,5 +51,5 @@ export type RaceDetailViewModel = {
   status: string;
   headers: RaceHeaderViewModel[];
   results: ResultRowViewModel[];
-  hasScores: boolean; // true once at least one result exists
+  hasScores: boolean;
 };

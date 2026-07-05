@@ -18,7 +18,10 @@ const feed: FeedItemViewModel[] = [
 ];
 
 const defaultHeaders = (labels: string[] = ["R1", "R2", "R3"]): RaceHeaderViewModel[] =>
-  labels.map((l, i) => ({ slot: `r${i + 1}`, label: l }));
+  labels.map((label, index) => ({
+    slot: `r${index + 1}`,
+    label,
+  }));
 
 const mockRaces: RaceListRowViewModel[] = [
   {
@@ -93,6 +96,16 @@ const mockResultsForSummer = (): ResultRowViewModel[] => [
   },
 ];
 
+function sortByNetPoints(results: ResultRowViewModel[]) {
+  return [...results].sort((a, b) => a.netPoints - b.netPoints);
+}
+
+function toPublicRaceList(races: RaceListRowViewModel[]) {
+  return races
+    .filter((race) => race.visibility === "public")
+    .sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt));
+}
+
 export async function fetchHomeContent(): Promise<HomeContentViewModel> {
   return {
     heroTitle: "Public race results, built for sailors, organisers, and spectators.",
@@ -105,8 +118,7 @@ export async function fetchHomeContent(): Promise<HomeContentViewModel> {
 }
 
 export async function fetchRaceList(): Promise<RaceListRowViewModel[]> {
-  const publicRaces = mockRaces.filter((race) => race.visibility === "public");
-  return publicRaces;
+  return toPublicRaceList(mockRaces);
 }
 
 export async function fetchRaceDetail(slug: string): Promise<RaceDetailViewModel | null> {
@@ -114,7 +126,8 @@ export async function fetchRaceDetail(slug: string): Promise<RaceDetailViewModel
 
   if (slug === "spring-series-round-1") {
     const headers = defaultHeaders(["R1", "R2", "R3"]);
-    const results = mockResultsForSpring();
+    const results = sortByNetPoints(mockResultsForSpring());
+
     return {
       name: "Spring Series Round 1",
       slug: "spring-series-round-1",
@@ -122,15 +135,16 @@ export async function fetchRaceDetail(slug: string): Promise<RaceDetailViewModel
       scheduledAt: "2026-07-03",
       status: "Published",
       headers,
-      results: results.sort((a, b) => a.netPoints - b.netPoints),
+      results,
       hasScores: results.length > 0,
     };
   }
 
   if (slug === "summer-cup-qualifier") {
     const headers = defaultHeaders(["R1", "R2", "R3"]);
-    const results = mockResultsForSummer();
+    const results = sortByNetPoints(mockResultsForSummer());
     const hasScores = results.length > 0;
+
     return {
       name: "Summer Cup Qualifier",
       slug: "summer-cup-qualifier",
@@ -138,7 +152,7 @@ export async function fetchRaceDetail(slug: string): Promise<RaceDetailViewModel
       scheduledAt: "2026-07-01",
       status: "Published",
       headers,
-      results: hasScores ? results.sort((a, b) => a.netPoints - b.netPoints) : results,
+      results: hasScores ? results : [],
       hasScores,
     };
   }
