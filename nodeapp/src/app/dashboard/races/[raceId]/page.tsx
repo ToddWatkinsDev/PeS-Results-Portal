@@ -1,16 +1,21 @@
-import Link from "next/link";
-import Button from "@/presentation/components/ui/button";
-import Card from "@/presentation/components/ui/card";
-import EmptyState from "@/presentation/components/ui/empty-state";
+import Link from "next/link"
+import { createClient } from "@/infrastructure/supabase/server"
+import Button from "@/presentation/components/ui/button"
+import Card from "@/presentation/components/ui/card"
+import EmptyState from "@/presentation/components/ui/empty-state"
 
 type ManageRacePageProps = {
-  params: {
-    raceId: string;
-  };
-};
+  params: Promise<{
+    raceId: string
+  }>
+}
 
-export default function ManageRacePage({ params }: ManageRacePageProps) {
-  const raceId = params.raceId;
+export default async function ManageRacePage({ params }: ManageRacePageProps) {
+  const { raceId } = await params
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
@@ -24,6 +29,11 @@ export default function ManageRacePage({ params }: ManageRacePageProps) {
         <p className="max-w-2xl text-[color:var(--color-text-muted)]">
           Update race details, review visibility, and move into result entry.
         </p>
+        {user?.email ? (
+          <p className="text-sm text-[color:var(--color-text-muted)]">
+            Signed in as {user.email}
+          </p>
+        ) : null}
       </section>
 
       <section className="grid gap-4 md:grid-cols-2">
@@ -63,5 +73,5 @@ export default function ManageRacePage({ params }: ManageRacePageProps) {
         }
       />
     </main>
-  );
+  )
 }

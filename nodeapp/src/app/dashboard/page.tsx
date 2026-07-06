@@ -1,7 +1,8 @@
-import Link from "next/link";
-import Button from "@/presentation/components/ui/button";
-import Card from "@/presentation/components/ui/card";
-import EmptyState from "@/presentation/components/ui/empty-state";
+import Link from "next/link"
+import { createClient } from "@/infrastructure/supabase/server"
+import Button from "@/presentation/components/ui/button"
+import Card from "@/presentation/components/ui/card"
+import EmptyState from "@/presentation/components/ui/empty-state"
 
 const dashboardItems = [
   {
@@ -19,9 +20,14 @@ const dashboardItems = [
     description: "Access account and race oversight tools.",
     href: "/admin/users",
   },
-];
+]
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
       <section className="space-y-3">
@@ -34,6 +40,11 @@ export default function DashboardPage() {
         <p className="max-w-2xl text-[color:var(--color-text-muted)]">
           Use the dashboard to manage races, record results, and oversee account access.
         </p>
+        {user?.email ? (
+          <p className="text-sm text-[color:var(--color-text-muted)]">
+            Signed in as {user.email}
+          </p>
+        ) : null}
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
@@ -62,5 +73,5 @@ export default function DashboardPage() {
         description="The structure is in place. Next, connect the dashboard to real user, race, and result data."
       />
     </main>
-  );
+  )
 }

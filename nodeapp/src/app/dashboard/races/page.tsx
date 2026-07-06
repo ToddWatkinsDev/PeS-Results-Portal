@@ -1,24 +1,30 @@
-import Link from "next/link";
-import Button from "@/presentation/components/ui/button";
-import Card from "@/presentation/components/ui/card";
-import EmptyState from "@/presentation/components/ui/empty-state";
+import Link from "next/link"
+import { createClient } from "@/infrastructure/supabase/server"
+import Button from "@/presentation/components/ui/button"
+import Card from "@/presentation/components/ui/card"
+import EmptyState from "@/presentation/components/ui/empty-state"
 
-const races = [
-  {
-    name: "Spring Series Round 1",
-    status: "Published",
-    visibility: "Public",
-    href: "/dashboard/races/spring-series-round-1",
-  },
-  {
-    name: "Summer Cup Qualifier",
-    status: "Draft",
-    visibility: "Private",
-    href: "/dashboard/races/summer-cup-qualifier",
-  },
-];
+export default async function DashboardRacesPage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-export default function DashboardRacesPage() {
+  const races = [
+    {
+      name: "Spring Series Round 1",
+      status: "Published",
+      visibility: "Public",
+      href: "/dashboard/races/spring-series-round-1",
+    },
+    {
+      name: "Summer Cup Qualifier",
+      status: "Draft",
+      visibility: "Private",
+      href: "/dashboard/races/summer-cup-qualifier",
+    },
+  ]
+
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
       <section className="space-y-3">
@@ -31,6 +37,11 @@ export default function DashboardRacesPage() {
         <p className="max-w-2xl text-[color:var(--color-text-muted)]">
           Review the races you manage and open any race to update details or results.
         </p>
+        {user?.email ? (
+          <p className="text-sm text-[color:var(--color-text-muted)]">
+            Signed in as {user.email}
+          </p>
+        ) : null}
       </section>
 
       <section className="flex justify-start">
@@ -74,5 +85,5 @@ export default function DashboardRacesPage() {
         />
       )}
     </main>
-  );
+  )
 }

@@ -1,18 +1,23 @@
-import Link from "next/link";
-import Button from "@/presentation/components/ui/button";
-import Card from "@/presentation/components/ui/card";
-import Input from "@/presentation/components/ui/input";
-import Select from "@/presentation/components/ui/select";
-import EmptyState from "@/presentation/components/ui/empty-state";
+import Link from "next/link"
+import { createClient } from "@/infrastructure/supabase/server"
+import Button from "@/presentation/components/ui/button"
+import Card from "@/presentation/components/ui/card"
+import Input from "@/presentation/components/ui/input"
+import Select from "@/presentation/components/ui/select"
+import EmptyState from "@/presentation/components/ui/empty-state"
 
 type NewResultPageProps = {
-  params: {
-    raceId: string;
-  };
-};
+  params: Promise<{
+    raceId: string
+  }>
+}
 
-export default function NewResultPage({ params }: NewResultPageProps) {
-  const raceId = params.raceId;
+export default async function NewResultPage({ params }: NewResultPageProps) {
+  const { raceId } = await params
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
@@ -26,6 +31,11 @@ export default function NewResultPage({ params }: NewResultPageProps) {
         <p className="max-w-2xl text-[color:var(--color-text-muted)]">
           Enter the race outcome manually for race {raceId}.
         </p>
+        {user?.email ? (
+          <p className="text-sm text-[color:var(--color-text-muted)]">
+            Signed in as {user.email}
+          </p>
+        ) : null}
       </section>
 
       <Card className="border-[color:var(--color-surface-2)] bg-[color:var(--color-surface)] p-6">
@@ -97,5 +107,5 @@ export default function NewResultPage({ params }: NewResultPageProps) {
         description="This page is ready for the full manual entry workflow in Phase 2."
       />
     </main>
-  );
+  )
 }

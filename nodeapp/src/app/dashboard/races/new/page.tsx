@@ -1,10 +1,16 @@
-import Link from "next/link";
-import Button from "@/presentation/components/ui/button";
-import Card from "@/presentation/components/ui/card";
-import Input from "@/presentation/components/ui/input";
-import Select from "@/presentation/components/ui/select";
+import Link from "next/link"
+import { createClient } from "@/infrastructure/supabase/server"
+import Button from "@/presentation/components/ui/button"
+import Card from "@/presentation/components/ui/card"
+import Input from "@/presentation/components/ui/input"
+import Select from "@/presentation/components/ui/select"
 
-export default function NewRacePage() {
+export default async function NewRacePage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
       <section className="space-y-3">
@@ -17,6 +23,11 @@ export default function NewRacePage() {
         <p className="max-w-2xl text-[color:var(--color-text-muted)]">
           Set up the race details so results can be recorded manually later.
         </p>
+        {user?.email ? (
+          <p className="text-sm text-[color:var(--color-text-muted)]">
+            Signed in as {user.email}
+          </p>
+        ) : null}
       </section>
 
       <Card className="border-[color:var(--color-surface-2)] bg-[color:var(--color-surface)] p-6">
@@ -63,5 +74,5 @@ export default function NewRacePage() {
         </form>
       </Card>
     </main>
-  );
+  )
 }
