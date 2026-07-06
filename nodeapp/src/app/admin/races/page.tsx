@@ -1,7 +1,9 @@
-import Link from "next/link";
-import Button from "@/presentation/components/ui/button";
-import Card from "@/presentation/components/ui/card";
-import EmptyState from "@/presentation/components/ui/empty-state";
+import Link from "next/link"
+import { redirect } from "next/navigation"
+import { isAdminUser } from "@/infrastructure/auth/permissions"
+import Button from "@/presentation/components/ui/button"
+import Card from "@/presentation/components/ui/card"
+import EmptyState from "@/presentation/components/ui/empty-state"
 
 const adminRaces = [
   {
@@ -16,9 +18,15 @@ const adminRaces = [
     status: "Draft",
     href: "/dashboard/races/summer-cup-qualifier",
   },
-];
+]
 
-export default function AdminRacesPage() {
+export default async function AdminRacesPage() {
+  const isAdmin = await isAdminUser()
+
+  if (!isAdmin) {
+    redirect("/dashboard")
+  }
+
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
       <section className="space-y-3">
@@ -63,5 +71,5 @@ export default function AdminRacesPage() {
         />
       )}
     </main>
-  );
+  )
 }

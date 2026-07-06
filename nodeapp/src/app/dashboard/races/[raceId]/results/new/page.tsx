@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { createClient } from "@/infrastructure/supabase/server"
 import Button from "@/presentation/components/ui/button"
 import Card from "@/presentation/components/ui/card"
@@ -6,11 +7,13 @@ import Input from "@/presentation/components/ui/input"
 import Select from "@/presentation/components/ui/select"
 import EmptyState from "@/presentation/components/ui/empty-state"
 
+
 type NewResultPageProps = {
   params: Promise<{
     raceId: string
   }>
 }
+
 
 export default async function NewResultPage({ params }: NewResultPageProps) {
   const { raceId } = await params
@@ -18,6 +21,10 @@ export default async function NewResultPage({ params }: NewResultPageProps) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect(`/login?redirectedFrom=/dashboard/races/${raceId}/results/new`)
+  }
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
@@ -31,12 +38,13 @@ export default async function NewResultPage({ params }: NewResultPageProps) {
         <p className="max-w-2xl text-[color:var(--color-text-muted)]">
           Enter the race outcome manually for race {raceId}.
         </p>
-        {user?.email ? (
+        {user.email ? (
           <p className="text-sm text-[color:var(--color-text-muted)]">
             Signed in as {user.email}
           </p>
         ) : null}
       </section>
+
 
       <Card className="border-[color:var(--color-surface-2)] bg-[color:var(--color-surface)] p-6">
         <form className="space-y-5">
@@ -50,6 +58,7 @@ export default async function NewResultPage({ params }: NewResultPageProps) {
             <Input id="gamertag" placeholder="SailorOne" />
           </div>
 
+
           <div className="space-y-2">
             <label
               htmlFor="position"
@@ -59,6 +68,7 @@ export default async function NewResultPage({ params }: NewResultPageProps) {
             </label>
             <Input id="position" type="number" placeholder="1" />
           </div>
+
 
           <div className="space-y-2">
             <label
@@ -70,6 +80,7 @@ export default async function NewResultPage({ params }: NewResultPageProps) {
             <Input id="time" placeholder="12:41" />
           </div>
 
+
           <div className="space-y-2">
             <label
               htmlFor="penalties"
@@ -79,6 +90,7 @@ export default async function NewResultPage({ params }: NewResultPageProps) {
             </label>
             <Input id="penalties" type="number" placeholder="0" />
           </div>
+
 
           <div className="space-y-2">
             <label
@@ -93,6 +105,7 @@ export default async function NewResultPage({ params }: NewResultPageProps) {
             </Select>
           </div>
 
+
           <div className="flex flex-wrap gap-3">
             <Button type="submit">Save result</Button>
             <Button variant="outline" asChild>
@@ -101,6 +114,7 @@ export default async function NewResultPage({ params }: NewResultPageProps) {
           </div>
         </form>
       </Card>
+
 
       <EmptyState
         title="Result entry shell is ready"

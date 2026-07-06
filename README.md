@@ -1,57 +1,74 @@
-# Phase 4 Status 1 — Auth and Permissions
+# Phase 4 Completion and Phase 5 Handover
 
-## Phase 4 goals
+## Phase 4 completion
 
-Phase 4 is about making the app secure, role-aware, and ready for the management work that comes next. The main goals are to provide a real login flow for manually created accounts, protect authenticated routes, centralise permission checks, and ensure the app clearly separates public browsing from authenticated management. [file:18][file:8]
+Phase 4 is complete. The authentication foundation is in place, protected routes are guarded, the login flow works for existing users, the register path remains closed, and the centralized permission model is established.
 
-Phase 4 should support at least three roles: anonymous, user/player, and admin. Anonymous users should only see public content, users should access assigned or private areas when allowed, and admins should be able to manage everything. [file:18][file:8]
+## What Phase 4 delivered
 
-## What is done so far
+- Working login flow for manually created accounts.
+- Redirect handling so signed-in users go to the dashboard.
+- No public self-service register flow.
+- Centralized role and access helpers in `auth.ts`.
+- Route guards for dashboard and race management pages.
+- Anonymous access blocked on protected routes.
+- Admin-only access model supported.
+- Client-only logout behavior separated from server components.
 
-The foundation for Phase 4 is now in place. The route plan includes `/dashboard`, `/dashboard/races`, `/dashboard/races/new`, `/dashboard/races/[raceId]`, `/dashboard/races/[raceId]/results/new`, `/admin/users`, and `/admin/races`, which matches the Phase 1 and Phase 4 direction. [file:7][file:18]
+## Important notes from Phase 4
 
-The dashboard pages have been updated to use server-side Supabase auth checks, and the server client helper has been corrected for Next.js 16 async cookies handling. That fixed the `cookieStore.getAll is not a function` error and allowed `/dashboard` to load successfully. [web:96][web:100]
+- Keep auth logic centralized in shared policy functions, not scattered through pages.
+- Keep server Supabase access inside server components only.
+- Keep user management manual in Supabase.
+- Keep the register path hidden or absent unless the product direction changes.
+- Protected route behavior should continue to be tested after any refactor.
 
-The public race detail page has also been updated to await `params` correctly in Next.js 16. That resolved the route error caused by reading `params.raceSlug` directly before unwrapping the promise. [web:96][web:101][web:102]
+## Phase 5 handover
 
-## What is fixed
+Phase 5 should focus on race management, which is the next functional layer after auth and permissions.
 
-The Supabase server helper now uses `await cookies()` before calling `getAll()`, which matches the current Next.js 16 server API behavior. This removed the runtime crash on authenticated dashboard routes. [web:96][web:100]
+## Phase 5 goals
 
-The public race detail page now awaits `params` before reading `raceSlug`, which fixes the dynamic route error for `/results/[raceSlug]`. The page can now safely resolve the public race model before rendering. [web:96][web:101][web:102]
+- Create race flow.
+- Edit and manage races.
+- Add manual result entry.
+- Support public and private visibility controls.
+- Connect race management screens to real data instead of shell content.
 
-## What still needs work
+## Phase 5 starting point
 
-The biggest remaining Phase 4 gap is route protection depth. The dashboard should not be accessible to logged-out users, and the app still needs a stronger, explicit admin section structure rather than only having the route in the plan. [file:18][file:8]
+The current app already has:
+- A secure entry path for authenticated users.
+- A dashboard shell.
+- Race-related route structure.
+- Permission helpers to support owned, assigned, and admin access later.
 
-The register route should remain restricted or hidden, and the login flow still needs to be completed as a real entry point for manually created accounts. Centralised permission functions still need to be wired through the rest of the app so route access, button visibility, and data access all agree. [file:18][file:8]
+## Phase 5 priorities
 
-## Broken or incomplete
+1. Connect race creation to real persistence.
+2. Add race detail editing and update flows.
+3. Add result entry saving.
+4. Add visibility control behavior.
+5. Tie race pages to owned and assigned data.
+6. Confirm admin oversight paths work as expected.
 
-The `asChild` console warning is still unresolved. That warning is coming from the UI button composition layer, not from the route pages themselves, so it will remain until `src/presentation/components/ui/button.tsx` is updated to handle `asChild` properly or until those usages are removed. [web:111][web:116][web:120]
+## Relevant information for Phase 5
 
-The public race detail page currently uses a mocked/fixed view model pattern rather than a fully wired production data source. That is acceptable for the current phase, but it should eventually be replaced with real public race data and the shared domain model. [file:8]
+- The project is manual-account only.
+- Anonymous users should still only see public content.
+- User and admin access should continue to rely on the shared auth policy layer.
+- Race management pages should build on the current dashboard structure rather than replacing it.
+- The app should stay modular so future integrations can still map into the internal domain model.
 
-## Dashboard protection
+## Suggested next work order
 
-The dashboard must stay inaccessible unless a user is logged in. That should be enforced at the middleware level and again on the server side inside protected pages, so anonymous users are redirected to `/login` before they can reach `/dashboard` or admin routes. [file:18][file:8]
+- Race creation persistence.
+- Race edit/update forms.
+- Manual result entry submission.
+- Race visibility toggles.
+- Ownership and assignment checks on race records.
+- Admin access verification for race management.
 
-This is a core Phase 4 requirement and should be treated as mandatory, not optional. It also needs to apply consistently to all dashboard and admin routes, not just the landing dashboard page. [file:18][file:8]
+## Completion summary
 
-## Admin section
-
-Phase 4 should include a real admin section with at least `/admin/users` and `/admin/races`. Those routes should be reserved for admins only and should eventually provide manual account management and platform oversight. [file:7][file:18]
-
-At the moment, the admin area is defined in the route plan, but it still needs the actual UI, role checks, and content screens. Admin-only access must be enforced the same way as dashboard protection, just with a stricter role requirement. [file:18][file:8]
-
-## Current status
-
-Overall, Phase 4 is partially complete: the auth foundation is better, the dashboard pages are using server auth, and the dynamic results page issue is fixed. The remaining work is to finish the login flow, harden route guards, add the admin section, and remove the `asChild` warning when convenient. [web:96][web:100][web:101][web:111]
-
-## Next actions
-
-1. Keep `/dashboard` and `/admin` fully protected from anonymous access. [file:18]
-2. Build out the admin section pages and access checks. [file:18][file:7]
-3. Finish the login flow for manual Supabase accounts. [file:18]
-4. Add central permission helpers so route and UI permissions stay aligned. [file:18][file:8]
-5. Fix the `Button` component `asChild` implementation when ready. [web:111][web:116][web:120]
+Phase 4 is done, and the app is ready for Phase 5 race management work.

@@ -4,9 +4,17 @@ import Card from "@/presentation/components/ui/card";
 import EmptyState from "@/presentation/components/ui/empty-state";
 import Footer from "@/presentation/components/footer";
 import { fetchHomeContent } from "@/presentation/adapters/public-adapter";
+import { createClient } from "@/infrastructure/supabase/server"
+import LogoffButton from "@/presentation/components/ui/logoff-button"
+
 
 export default async function HomePage() {
-  const mdl = await fetchHomeContent();
+  const mdl = await fetchHomeContent()
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
 
   return (
     <>
@@ -17,6 +25,7 @@ export default async function HomePage() {
               Play eSailing Results Platform
             </div>
 
+
             <div className="space-y-4">
               <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-[color:var(--color-text)] sm:text-5xl">
                 {mdl.heroTitle}
@@ -26,15 +35,21 @@ export default async function HomePage() {
               </p>
             </div>
 
+
             <div className="flex flex-wrap gap-3">
               <Button asChild>
                 <Link href={mdl.ctaHref}>{mdl.ctaLabel}</Link>
               </Button>
-              <Button variant="outline" asChild>
-                <Link href="/login">Login</Link>
-              </Button>
+              {user ? (
+                <LogoffButton />
+              ) : (
+                <Button variant="outline" asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
+              )}
             </div>
           </div>
+
 
           <Card className="border-[color:var(--color-surface-2)] bg-[color:var(--color-surface)] p-6">
             <div className="space-y-4">
@@ -51,6 +66,7 @@ export default async function HomePage() {
           </Card>
         </section>
 
+
         <section className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold text-[color:var(--color-text)]">
@@ -60,6 +76,7 @@ export default async function HomePage() {
               This section will connect to live public results in the next slice.
             </p>
           </div>
+
 
           {mdl.featuredFeed.length === 0 ? (
             <EmptyState
@@ -83,6 +100,7 @@ export default async function HomePage() {
           )}
         </section>
       </main>
+
 
       <Footer />
     </>
